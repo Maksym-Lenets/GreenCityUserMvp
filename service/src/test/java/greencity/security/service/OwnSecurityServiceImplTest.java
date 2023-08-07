@@ -37,8 +37,6 @@ import greencity.exception.exceptions.UserBlockedException;
 import greencity.exception.exceptions.UserDeactivatedException;
 import greencity.exception.exceptions.WrongEmailException;
 import greencity.exception.exceptions.WrongPasswordException;
-import greencity.repository.AuthorityRepo;
-import greencity.repository.PositionRepo;
 import greencity.repository.UserRepo;
 import greencity.security.dto.ownsecurity.EmployeeSignUpDto;
 import greencity.security.dto.ownsecurity.OwnSignInDto;
@@ -74,9 +72,6 @@ class OwnSecurityServiceImplTest {
     OwnSecurityRepo ownSecurityRepo;
 
     @Mock
-    PositionRepo positionRepo;
-
-    @Mock
     UserService userService;
 
     @Mock
@@ -97,9 +92,6 @@ class OwnSecurityServiceImplTest {
     @Mock
     EmailService emailService;
 
-    @Mock
-    AuthorityRepo authorityRepo;
-
     private OwnSecurityService ownSecurityService;
 
     private UserVO verifiedUser;
@@ -111,9 +103,9 @@ class OwnSecurityServiceImplTest {
     @BeforeEach
     public void init() {
         initMocks(this);
-        ownSecurityService = new OwnSecurityServiceImpl(ownSecurityRepo, positionRepo, userService, passwordEncoder,
+        ownSecurityService = new OwnSecurityServiceImpl(ownSecurityRepo, userService, passwordEncoder,
             jwtTool, 1, restorePasswordEmailRepo, modelMapper,
-            userRepo, emailService, authorityRepo);
+            userRepo, emailService);
 
         verifiedUser = UserVO.builder()
             .email("test@gmail.com")

@@ -3,7 +3,6 @@ package greencity.security.dto.ownsecurity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import greencity.constant.ValidationConstants;
-import greencity.dto.position.PositionDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +28,6 @@ public class EmployeeSignUpDto {
         message = ValidationConstants.INVALID_EMAIL)
     private String email;
     private String uuid;
-    private List<PositionDto> positions;
     @JsonIgnore
     private String password;
     @JsonProperty("isUbs")

@@ -2,14 +2,11 @@ package greencity.security.service;
 
 import greencity.constant.AppConstant;
 import greencity.constant.ErrorMessage;
-import greencity.dto.position.PositionDto;
 import greencity.dto.user.UserAdminRegistrationDto;
 import greencity.dto.user.UserManagementDto;
 import greencity.dto.user.UserVO;
-import greencity.entity.Authority;
 import greencity.entity.Language;
 import greencity.entity.OwnSecurity;
-import greencity.entity.Position;
 import greencity.entity.RestorePasswordEmail;
 import greencity.entity.User;
 import greencity.entity.VerifyEmail;
@@ -26,8 +23,6 @@ import greencity.exception.exceptions.UserBlockedException;
 import greencity.exception.exceptions.UserDeactivatedException;
 import greencity.exception.exceptions.WrongEmailException;
 import greencity.exception.exceptions.WrongPasswordException;
-import greencity.repository.AuthorityRepo;
-import greencity.repository.PositionRepo;
 import greencity.repository.UserRepo;
 import greencity.security.dto.AccessRefreshTokensDto;
 import greencity.security.dto.SuccessSignInDto;
@@ -68,7 +63,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class OwnSecurityServiceImpl implements OwnSecurityService {
     private final OwnSecurityRepo ownSecurityRepo;
-    private final PositionRepo positionRepo;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTool jwtTool;
@@ -79,14 +73,12 @@ public class OwnSecurityServiceImpl implements OwnSecurityService {
     private static final String VALID_PW_CHARS =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+{}[]|:;<>?,./";
     private final EmailService emailService;
-    private final AuthorityRepo authorityRepo;
 
     /**
      * Constructor.
      */
     @Autowired
     public OwnSecurityServiceImpl(OwnSecurityRepo ownSecurityRepo,
-        PositionRepo positionRepo,
         UserService userService,
         PasswordEncoder passwordEncoder,
         JwtTool jwtTool,
@@ -94,9 +86,8 @@ public class OwnSecurityServiceImpl implements OwnSecurityService {
         RestorePasswordEmailRepo restorePasswordEmailRepo,
         ModelMapper modelMapper,
         UserRepo userRepo,
-        EmailService emailService, AuthorityRepo authorityRepo) {
+        EmailService emailService) {
         this.ownSecurityRepo = ownSecurityRepo;
-        this.positionRepo = positionRepo;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtTool = jwtTool;
@@ -105,7 +96,6 @@ public class OwnSecurityServiceImpl implements OwnSecurityService {
         this.modelMapper = modelMapper;
         this.userRepo = userRepo;
         this.emailService = emailService;
-        this.authorityRepo = authorityRepo;
     }
 
     /**
@@ -197,13 +187,6 @@ public class OwnSecurityServiceImpl implements OwnSecurityService {
         employee.setShowLocation(true);
         employee.setShowEcoPlace(true);
         employee.setShowShoppingList(true);
-        List<String> positionNames = employeeSignUpDto.getPositions().stream()
-            .map(PositionDto::getName).collect(Collectors.toList());
-        List<Authority> list = authorityRepo.findAuthoritiesByPositions(positionNames);
-        employee.setAuthorities(list);
-
-        List<Position> positions = positionRepo.findPositionsByNames(positionNames);
-        employee.setPositions(positions);
 
         try {
             User savedUser = userRepo.save(employee);

@@ -9,7 +9,6 @@ import static greencity.constant.AppConstant.AUTHORIZATION;
 import greencity.constant.AppConstant;
 import greencity.converters.UserArgumentResolver;
 import greencity.dto.PageableAdvancedDto;
-import greencity.dto.EmployeePositionsDto;
 import greencity.dto.achievement.AchievementVO;
 import greencity.dto.achievement.UserAchievementVO;
 import greencity.dto.achievement.UserVOAchievement;
@@ -28,8 +27,6 @@ import greencity.dto.user.UserVO;
 import greencity.enums.EmailNotification;
 import greencity.enums.Role;
 import greencity.repository.UserRepo;
-import greencity.security.service.AuthorityService;
-import greencity.security.service.PositionService;
 import greencity.service.UserService;
 
 import java.security.Principal;

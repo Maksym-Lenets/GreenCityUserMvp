@@ -2,7 +2,6 @@ package greencity.security.jwt;
 
 import greencity.dto.user.UserVO;
 import greencity.enums.Role;
-import greencity.security.service.AuthorityService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
@@ -30,7 +29,6 @@ public class JwtTool {
     private final Integer accessTokenValidTimeInMinutes;
     private final Integer refreshTokenValidTimeInMinutes;
     private final String accessTokenKey;
-    private final AuthorityService authorityService;
 
     /**
      * Constructor.
@@ -38,11 +36,10 @@ public class JwtTool {
     @Autowired
     public JwtTool(@Value("${accessTokenValidTimeInMinutes}") Integer accessTokenValidTimeInMinutes,
         @Value("${refreshTokenValidTimeInMinutes}") Integer refreshTokenValidTimeInMinutes,
-        @Value("${tokenKey}") String accessTokenKey, AuthorityService authorityService) {
+        @Value("${tokenKey}") String accessTokenKey) {
         this.accessTokenValidTimeInMinutes = accessTokenValidTimeInMinutes;
         this.refreshTokenValidTimeInMinutes = refreshTokenValidTimeInMinutes;
         this.accessTokenKey = accessTokenKey;
-        this.authorityService = authorityService;
     }
 
     /**
@@ -54,10 +51,6 @@ public class JwtTool {
     public String createAccessToken(String email, Role role) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put(ROLE, Collections.singleton(role.name()));
-
-        if (role.equals(Role.ROLE_UBS_EMPLOYEE)) {
-            claims.put("employee_authorities", authorityService.getAllEmployeesAuthorities(email));
-        }
 
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
