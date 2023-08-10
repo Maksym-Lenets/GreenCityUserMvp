@@ -22,10 +22,8 @@ import greencity.dto.user.UsersFriendDto;
 import greencity.dto.verifyemail.VerifyEmailVO;
 import greencity.dto.violation.UserViolationMailDto;
 
-import greencity.entity.Authority;
 import greencity.entity.Language;
 import greencity.entity.OwnSecurity;
-import greencity.entity.Position;
 import greencity.entity.RestorePasswordEmail;
 import greencity.entity.SocialNetwork;
 import greencity.entity.User;
@@ -142,27 +140,6 @@ public class ModelUtils {
         return list;
     }
 
-    public static List<Authority> authorities() {
-        List<User> users = new ArrayList<>();
-        users.add(User.builder()
-            .id(1L)
-            .email("taras@gmail.com")
-            .role(Role.ROLE_UBS_EMPLOYEE)
-            .build());
-        List<Authority> authorities = new ArrayList<>();
-        authorities.add(Authority.builder()
-            .id(1L)
-            .name("test1")
-            .employees(users)
-            .build());
-        authorities.add(Authority.builder()
-            .id(2L)
-            .name("test2")
-            .employees(users)
-            .build());
-        return authorities;
-    }
-
     public static UserEmployeeAuthorityDto getUserEmployeeAuthorityDto() {
         return UserEmployeeAuthorityDto.builder()
             .employeeEmail("taras@gmail.com")
@@ -174,23 +151,6 @@ public class ModelUtils {
         return UserEmployeeAuthorityDto.builder()
             .employeeEmail("superadmin@gmail.com")
             .authorities(List.of("test1"))
-            .build();
-    }
-
-    public static List<Position> getPositions() {
-        return List.of(Position.builder()
-            .id(1L)
-            .name("Супер адмін")
-            .build());
-    }
-
-    public static Authority getAuthority() {
-        List<User> list = new ArrayList<>();
-        list.add(createUser());
-        return Authority.builder()
-            .id(1L)
-            .name("test1")
-            .employees(list)
             .build();
     }
 
@@ -400,65 +360,12 @@ public class ModelUtils {
             .build();
     }
 
-    public static User createEmployee() {
-        return User.builder()
-            .id(1L)
-            .email("taras@gmail.com")
-            .authorities(authorities())
-            .role(Role.ROLE_UBS_EMPLOYEE)
-            .positions(List.of(Position.builder()
-                .id(1L)
-                .name("Супер адмін")
-                .build()))
-            .build();
-    }
-
-    public static User createEmployeeDriver() {
-        return User.builder()
-            .id(1L)
-            .email("taras@gmail.com")
-            .authorities(authorities())
-            .role(Role.ROLE_UBS_EMPLOYEE)
-            .positions(List.of(Position.builder()
-                .id(1L)
-                .name("Водій")
-                .build()))
-            .build();
-    }
-
-    public static User createSuperAdmin() {
-        return User.builder()
-            .id(1L)
-            .email("superadmin@gmail.com")
-            .authorities(authorities())
-            .role(Role.ROLE_UBS_EMPLOYEE)
-            .positions(List.of(Position.builder()
-                .id(1L)
-                .name("Супер адмін")
-                .build()))
-            .build();
-    }
-
     public static User createAdmin() {
         return User.builder()
             .id(2L)
             .email("test@mail.com")
             .userStatus(UserStatus.CREATED)
             .role(Role.ROLE_ADMIN)
-            .authorities(authorities())
-            .build();
-    }
-
-    public static User createEmployeeAdmin() {
-        return User.builder()
-            .id(1L)
-            .email("taras@gmail.com")
-            .authorities(authorities())
-            .role(Role.ROLE_UBS_EMPLOYEE)
-            .positions(List.of(Position.builder()
-                .id(1L)
-                .name("Адмін")
-                .build()))
             .build();
     }
 
@@ -521,18 +428,6 @@ public class ModelUtils {
         return PositionAuthoritiesDto.builder()
             .positionId(List.of(1L))
             .authorities(List.of("Auth"))
-            .build();
-    }
-
-    public static User getEmployeeWithPositionsAndRelatedAuthorities() {
-        return User.builder()
-            .positions(List.of(Position.builder()
-                .id(1L)
-                .name("Admin")
-                .build()))
-            .authorities(List.of(Authority.builder()
-                .name("Auth")
-                .build()))
             .build();
     }
 }

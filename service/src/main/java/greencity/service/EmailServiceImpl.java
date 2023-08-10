@@ -6,7 +6,6 @@ import greencity.constant.LogMessage;
 import greencity.dto.category.CategoryDto;
 import greencity.dto.econews.AddEcoNewsDtoResponse;
 import greencity.dto.econews.EcoNewsForSendEmailDto;
-import greencity.dto.eventcomment.EventCommentForSendEmailDto;
 import greencity.dto.newssubscriber.NewsSubscriberResponseDto;
 import greencity.dto.notification.NotificationDto;
 import greencity.dto.place.PlaceNotificationDto;
@@ -120,14 +119,6 @@ public class EmailServiceImpl implements EmailService {
             String template = createEmailTemplate(model, EmailConstants.NEWS_RECEIVE_EMAIL_PAGE);
             sendEmail(dto.getEmail(), EmailConstants.NEWS, template);
         }
-    }
-
-    @Override
-    public void sendNewCommentForEventOrganizer(EventCommentForSendEmailDto dto) {
-        Map<String, Object> model = new HashMap<>();
-        model.put(EmailConstants.EVENT_COMMENT_LINK, serverLink + "/events/comments/" + dto.getId());
-        String template = createEmailTemplate(model, EmailConstants.NEW_EVENT_COMMENT_EMAIL_PAGE);
-        sendEmail(dto.getEmail(), EmailConstants.EVENT_COMMENT, template);
     }
 
     @Override

@@ -8,10 +8,8 @@ import greencity.constant.HttpStatuses;
 import greencity.dto.PageableAdvancedDto;
 import greencity.dto.PageableDto;
 import greencity.dto.UbsCustomerDto;
-import greencity.dto.EmployeePositionsDto;
 import greencity.dto.filter.FilterUserDto;
 import greencity.dto.friends.SixFriendsPageResponceDto;
-import greencity.dto.position.PositionAuthoritiesDto;
 import greencity.dto.shoppinglist.CustomShoppingListItemResponseDto;
 import greencity.dto.ubs.UbsTableCreationDto;
 import greencity.dto.user.RoleDto;
@@ -36,8 +34,6 @@ import greencity.dto.user.UserVO;
 import greencity.enums.EmailNotification;
 import greencity.enums.Role;
 import greencity.enums.UserStatus;
-import greencity.security.service.AuthorityService;
-import greencity.security.service.PositionService;
 import greencity.service.AllUsersMutualFriends;
 import greencity.service.EmailService;
 import greencity.service.UserService;
@@ -74,8 +70,6 @@ import springfox.documentation.annotations.ApiIgnore;
 public class UserController {
     private final UserService userService;
     private final EmailService emailService;
-    private final PositionService positionService;
-    private final AuthorityService authorityService;
     private final AllUsersMutualFriends allUsersMutualFriends;
 
     /**
@@ -1132,114 +1126,6 @@ public class UserController {
     public ResponseEntity<Object> markUserAsDeactivated(
         @RequestParam @ApiIgnore String uuid) {
         userService.markUserAsDeactivated(uuid);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    /**
-     * Controller to get information about all employee's authorities.
-     *
-     * @return @return Set of {@link String}
-     *
-     * @author Inna Yashna.
-     */
-    @ApiOperation(value = "Get information about all employee's authorities")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = HttpStatuses.OK),
-        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-        @ApiResponse(code = 401, message = HttpStatuses.UNAUTHORIZED),
-        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
-        @ApiResponse(code = 404, message = HttpStatuses.NOT_FOUND)
-    })
-    @GetMapping("/get-all-authorities")
-    public ResponseEntity<Object> getAllAuthorities(@RequestParam String email) {
-        Set<String> authorities = authorityService.getAllEmployeesAuthorities(email);
-        return ResponseEntity.status(HttpStatus.OK).body(authorities);
-    }
-
-    /**
-     * Controller to get an employee`s positions and all possible related
-     * authorities to these positions.
-     *
-     * @param email {@link String} - employee email.
-     * @return {@link PositionAuthoritiesDto}
-     *
-     * @author Anton Bondar.
-     */
-    @ApiOperation(value = "Get information about an employee`s positions and all possible "
-        + "related authorities to these positions.")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = HttpStatuses.OK),
-        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-        @ApiResponse(code = 401, message = HttpStatuses.UNAUTHORIZED),
-        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
-        @ApiResponse(code = 404, message = HttpStatuses.NOT_FOUND)
-    })
-    @GetMapping("/get-positions-authorities")
-    public ResponseEntity<PositionAuthoritiesDto> getPositionsAndRelatedAuthorities(@RequestParam String email) {
-        return ResponseEntity.status(HttpStatus.OK).body(positionService.getPositionsAndRelatedAuthorities(email));
-    }
-
-    /**
-     * Controller to get a list of login employee`s positions.
-     *
-     * @param email {@link String} - employee email.
-     * @return List of {@link String} - list of employee positions.
-     *
-     * @author Anton Bondar.
-     */
-    @ApiOperation(value = "Get information about login employee`s positions.")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = HttpStatuses.OK),
-        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-        @ApiResponse(code = 401, message = HttpStatuses.UNAUTHORIZED),
-        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
-        @ApiResponse(code = 404, message = HttpStatuses.NOT_FOUND)
-    })
-    @GetMapping("/get-employee-login-positions")
-    public ResponseEntity<List<String>> getEmployeeLoginPositionNames(@RequestParam String email) {
-        return ResponseEntity.status(HttpStatus.OK).body(positionService.getEmployeeLoginPositionNames(email));
-    }
-
-    /**
-     * Controller edit an employee`s authorities.
-     *
-     * @return {@link UserEmployeeAuthorityDto}
-     *
-     * @author Nataliia Hlazova.
-     */
-    @ApiOperation(value = "Edit an employee`s authorities")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = HttpStatuses.OK, response = UserEmployeeAuthorityDto.class),
-        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-        @ApiResponse(code = 401, message = HttpStatuses.UNAUTHORIZED),
-        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
-        @ApiResponse(code = 404, message = HttpStatuses.NOT_FOUND)
-    })
-    @PutMapping("/edit-authorities")
-    public ResponseEntity<Object> editAuthorities(@Valid @RequestBody UserEmployeeAuthorityDto dto) {
-        authorityService.updateEmployeesAuthorities(dto);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    /**
-     * Controller that update an employee`s authorities to related positions.
-     *
-     * @param dto - UpdateEmployeeAuthoritiesDto.
-     * @return {@link HttpStatus} - Http status code.
-     * @author Nikita Korzh.
-     */
-    @ApiOperation(value = "Update an employee`s authorities to related positions")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = HttpStatuses.OK),
-        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-        @ApiResponse(code = 401, message = HttpStatuses.UNAUTHORIZED),
-        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
-        @ApiResponse(code = 404, message = HttpStatuses.NOT_FOUND)
-    })
-    @PutMapping("/authorities")
-    public ResponseEntity<HttpStatus> updateAuthoritiesToRelatedPositions(
-        @Valid @RequestBody EmployeePositionsDto dto) {
-        authorityService.updateAuthoritiesToRelatedPositions(dto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

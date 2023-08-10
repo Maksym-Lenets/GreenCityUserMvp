@@ -144,18 +144,4 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserDeactivationReason> userDeactivationReasons;
-
-    @ManyToMany
-    @JoinTable(
-        name = "employee_authorities_mapping",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "authority_id"))
-    private List<Authority> authorities;
-
-    @ManyToMany
-    @JoinTable(
-        name = "employee_positions_mapping",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "position_id"))
-    private List<Position> positions;
 }
