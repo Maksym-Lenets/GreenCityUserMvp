@@ -9,10 +9,6 @@ import static greencity.constant.AppConstant.AUTHORIZATION;
 import greencity.constant.AppConstant;
 import greencity.converters.UserArgumentResolver;
 import greencity.dto.PageableAdvancedDto;
-import greencity.dto.achievement.AchievementVO;
-import greencity.dto.achievement.UserAchievementVO;
-import greencity.dto.achievement.UserVOAchievement;
-import greencity.dto.achievementcategory.AchievementCategoryVO;
 import greencity.dto.filter.FilterUserDto;
 import greencity.dto.language.LanguageVO;
 import greencity.dto.ubs.UbsTableCreationDto;
@@ -85,10 +81,6 @@ class UserControllerTest {
     private UserService userService;
     @Mock
     private UserRepo userRepo;
-    @Mock
-    private AuthorityService authorityService;
-    @Mock
-    private PositionService positionService;
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -468,33 +460,6 @@ class UserControllerTest {
     }
 
     @Test
-    void findUserForAchievementTest() throws Exception {
-        UserVOAchievement userVOAchievement = UserVOAchievement.builder()
-            .id(1L)
-            .name(TestConst.NAME)
-            .userAchievements(List.of(
-                UserAchievementVO.builder()
-                    .id(10L)
-                    .user(ModelUtils.getUserVO())
-                    .achievement(AchievementVO.builder()
-                        .id(20L)
-                        .achievementCategory(AchievementCategoryVO.builder()
-                            .id(30L)
-                            .name("TestAchievementCategory")
-                            .build())
-                        .build())
-                    .build()))
-            .build();
-        when(userService.findUserForAchievement(1L)).thenReturn(userVOAchievement);
-        mockMvc.perform(get(userLink + "/findByIdForAchievement")
-            .param("id", "1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(1L))
-            .andExpect(jsonPath("$.name").value(TestConst.NAME))
-            .andExpect(jsonPath("$.userAchievements.length()").value(1));
-    }
-
-    @Test
     void findUserForManagementTest() throws Exception {
         Pageable pageable = PageRequest.of(0, 20);
         when(userService.findUserForManagementByPage(pageable)).thenReturn(ModelUtils.getPageableAdvancedDto());
@@ -777,87 +742,6 @@ class UserControllerTest {
             .content(objectMapper.writeValueAsString(uuids)))
             .andExpect(status().isOk());
         verify(userService).markUserAsDeactivated(uuid);
-    }
-
-    @Test
-    void getAllAuthoritiesTest() throws Exception {
-        Principal principal = mock(Principal.class);
-        when(principal.getName()).thenReturn("testmail@gmail.com");
-
-        mockMvc.perform(get(userLink + "/get-all-authorities" + "?email=" + principal.getName())
-            .principal(principal)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(principal.getName())))
-            .andExpect(status().isOk());
-
-        verify(authorityService).getAllEmployeesAuthorities(principal.getName());
-    }
-
-    @Test
-    void getPositionsAndRelatedAuthoritiesTest() throws Exception {
-        Principal principal = mock(Principal.class);
-        when(principal.getName()).thenReturn("testmail@gmail.com");
-
-        mockMvc.perform(get(userLink + "/get-positions-authorities" + "?email=" + principal.getName())
-            .principal(principal)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(principal.getName())))
-            .andExpect(status().isOk());
-
-        verify(positionService).getPositionsAndRelatedAuthorities(principal.getName());
-    }
-
-    @Test
-    void getEmployeeLoginPositionNamesTest() throws Exception {
-        Principal principal = mock(Principal.class);
-        when(principal.getName()).thenReturn("testmail@gmail.com");
-
-        mockMvc.perform(get(userLink + "/get-employee-login-positions" + "?email=" + principal.getName())
-            .principal(principal)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(principal.getName())))
-            .andExpect(status().isOk());
-
-        verify(positionService).getEmployeeLoginPositionNames(principal.getName());
-    }
-
-    @Test
-    void editAuthoritiesTest() throws Exception {
-        Principal principal = mock(Principal.class);
-        List<String> list = new ArrayList<>();
-        list.add("EDIT_ORDER");
-        UserEmployeeAuthorityDto dto = UserEmployeeAuthorityDto.builder()
-            .employeeEmail("test@mail.com")
-            .authorities(list)
-            .build();
-        when(principal.getName()).thenReturn("testmail@gmail.com");
-
-        String content = "{\n"
-            + "  \"authorities\":[ \"EDIT_ORDER\"],\n"
-            + "  \"employeeEmail\": \"test@mail.com\"\n"
-            + "}";
-
-        mockMvc.perform(put(userLink + "/edit-authorities")
-            .principal(principal)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(content))
-            .andExpect(status().isOk());
-
-        verify(authorityService).updateEmployeesAuthorities(dto);
-    }
-
-    @Test
-    void updatePositionsAndRelatedAuthoritiesTest() throws Exception {
-        Principal principal = mock(Principal.class);
-        var dto = new EmployeePositionsDto();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(dto);
-        mockMvc.perform(put(userLink + "/authorities")
-            .principal(principal)
-            .content(json)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
-        verify(authorityService).updateAuthoritiesToRelatedPositions(dto);
     }
 
     @Test

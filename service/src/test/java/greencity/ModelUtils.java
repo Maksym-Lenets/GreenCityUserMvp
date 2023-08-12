@@ -5,12 +5,9 @@ import greencity.dto.UbsCustomerDto;
 import greencity.dto.econews.AddEcoNewsDtoResponse;
 import greencity.dto.language.LanguageVO;
 import greencity.dto.ownsecurity.OwnSecurityVO;
-import greencity.dto.position.PositionAuthoritiesDto;
-import greencity.dto.position.PositionDto;
 import greencity.dto.ubs.UbsProfileCreationDto;
 import greencity.dto.user.EcoNewsAuthorDto;
 import greencity.dto.user.UserAdminRegistrationDto;
-import greencity.dto.user.UserAllFriendsDto;
 import greencity.dto.user.UserEmployeeAuthorityDto;
 import greencity.dto.user.UserManagementDto;
 import greencity.dto.user.UserManagementUpdateDto;
@@ -18,7 +15,6 @@ import greencity.dto.user.UserProfileDtoRequest;
 import greencity.dto.user.UserProfilePictureDto;
 import greencity.dto.user.UserProfileStatisticsDto;
 import greencity.dto.user.UserVO;
-import greencity.dto.user.UsersFriendDto;
 import greencity.dto.verifyemail.VerifyEmailVO;
 import greencity.dto.violation.UserViolationMailDto;
 
@@ -31,7 +27,6 @@ import greencity.entity.VerifyEmail;
 import greencity.enums.EmailNotification;
 import greencity.enums.Role;
 import greencity.enums.UserStatus;
-import greencity.security.dto.ownsecurity.EmployeeSignUpDto;
 import greencity.security.dto.ownsecurity.OwnRestoreDto;
 import greencity.security.dto.ownsecurity.OwnSignUpDto;
 
@@ -55,33 +50,6 @@ public class ModelUtils {
     public static final UserManagementDto CREATE_USER_MANAGER_DTO = createUserManagerDto();
     public static final List<UserAllFriendsDto> CREATE_USER_ALL_FRIENDS_DTO = createUserAllFriendsDto();
     public static final String TEST_EMAIL = "taras@gmail.com";
-
-    public static UsersFriendDto usersFriendDto = new UsersFriendDto() {
-        @Override
-        public Long getId() {
-            return 1L;
-        }
-
-        @Override
-        public String getName() {
-            return TestConst.NAME;
-        }
-
-        @Override
-        public String getCity() {
-            return "test";
-        }
-
-        @Override
-        public Double getRating() {
-            return 20.0;
-        }
-
-        @Override
-        public String getProfilePicture() {
-            return "profile";
-        }
-    };
 
     private static UserManagementDto createUserManagerDto() {
         return UserManagementDto.builder()
@@ -395,18 +363,6 @@ public class ModelUtils {
             .build();
     }
 
-    public static EmployeeSignUpDto getEmployeeSignUpDto() {
-        return EmployeeSignUpDto.builder()
-            .name("Taras")
-            .email("test@mail.com")
-            .positions(List.of(PositionDto.builder()
-                .id(1L)
-                .name("test")
-                .build()))
-            .isUbs(true)
-            .build();
-    }
-
     public static OwnSignUpDto getOwnSignUpDto() {
         return OwnSignUpDto.builder()
             .name("Name")
@@ -421,13 +377,6 @@ public class ModelUtils {
             .name("UbsProfile")
             .email("ubsuser@mail.com")
             .uuid("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
-            .build();
-    }
-
-    public static PositionAuthoritiesDto getPositionAuthoritiesDto() {
-        return PositionAuthoritiesDto.builder()
-            .positionId(List.of(1L))
-            .authorities(List.of("Auth"))
             .build();
     }
 }

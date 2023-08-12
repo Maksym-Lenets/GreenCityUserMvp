@@ -51,16 +51,6 @@ public interface UserService {
     List<String> findAllUsersCities();
 
     /**
-     * Find and return all registration months. Runs an SQL Query which is described
-     * in {@link User} under {@link NamedNativeQuery} annotation. Spring Data JPA
-     * can run a named native query that follows the naming convention
-     * {entityClass.repositoryMethodName}.
-     *
-     * @return {@link List} of {@link RegistrationStatisticsDtoResponse}
-     **/
-    Map<Integer, Long> findAllRegistrationMonthsMap();
-
-    /**
      * Method that allow you to save new {@link UserVO}.
      *
      * @param user a value of {@link UserVO}
@@ -218,15 +208,6 @@ public interface UserService {
     UserUpdateDto update(UserUpdateDto dto, String email);
 
     /**
-     * Update ubs employee {@link UserVO}.
-     *
-     * @param newEmployeeEmail {@link String} - new employee's email.
-     * @param uuid             {@link String} - uuid of employee.
-     * @author Inna Yashna
-     */
-    void updateEmployeeEmail(String newEmployeeEmail, String uuid);
-
-    /**
      * Updates refresh token for a given user.
      *
      * @param refreshTokenKey - new refresh token key
@@ -280,23 +261,6 @@ public interface UserService {
     void deleteUserProfilePicture(String email);
 
     /**
-     * Get six friends with the highest rating {@link UserVO}.
-     *
-     * @param userId {@link Long}
-     * @author Marian Datsko
-     */
-    List<UserProfilePictureDto> getSixFriendsWithTheHighestRating(Long userId);
-
-    /**
-     * Get six friends with the highest rating {@link UserVO}. by page.
-     *
-     * @param userId {@link Long}
-     * @return {@link SixFriendsPageResponceDto}.
-     * @author Oleh Bilonizhka
-     */
-    SixFriendsPageResponceDto getSixFriendsWithTheHighestRatingPaged(Long userId);
-
-    /**
      * Save user profile information {@link UserVO}.
      *
      * @author Marian Datsko
@@ -335,22 +299,6 @@ public interface UserService {
      * @author Marian Datsko
      */
     UserProfileStatisticsDto getUserProfileStatistics(Long userId);
-
-    /**
-     * Get user and six friends with the online status {@link UserVO}.
-     *
-     * @param userId {@link Long}
-     * @author Yurii Zhurakovskyi
-     */
-    UserAndFriendsWithOnlineStatusDto getUserAndSixFriendsWithOnlineStatus(Long userId);
-
-    /**
-     * Get user and all friends with the online status {@link UserVO} by page.
-     *
-     * @param userId {@link Long}
-     * @author Yurii Zhurakovskyi
-     */
-    UserAndAllFriendsWithOnlineStatusDto getAllFriendsWithTheOnlineStatus(Long userId, Pageable pageable);
 
     /**
      * Method deactivates all the {@link UserVO} by list of IDs.
@@ -395,64 +343,6 @@ public interface UserService {
     List<UserVO> findAll();
 
     /**
-     * Method that finds new friends by name.
-     *
-     * @return {@link List} of {@link UserAllFriendsDto} instances.
-     */
-    PageableDto<UserAllFriendsDto> findNewFriendByName(String name, Pageable page, Long id);
-
-    /**
-     * Method that finds users by name.
-     *
-     * @return {@link List} of {@link UserAllFriendsDto} instances.
-     */
-    PageableDto<UserAllFriendsDto> findUserByName(String name, Pageable page, Long id);
-
-    /**
-     * Method that finds friends by name.
-     *
-     * @return {@link List} of {@link UserAllFriendsDto} instances.
-     */
-    PageableDto<UserAllFriendsDto> findFriendByName(String name, Pageable page, Long id);
-
-    /**
-     * Method that finds user's recommended friends.
-     *
-     * @param pageable {@link Pageable}.
-     * @param userId   {@link Long} -current user's id.
-     * @return {@link PageableDto} of {@link RecommendedFriendDto} instances.
-     */
-
-    PageableDto<UserAllFriendsDto> findUsersRecommendedFriends(Pageable pageable, Long userId);
-
-    /**
-     * Method that finds all user's friends.
-     *
-     * @param pageable {@link Pageable}.
-     * @param userId   {@link Long} -current user's id.
-     * @return {@link PageableDto} of {@link RecommendedFriendDto} instances.
-     */
-
-    PageableDto<UserAllFriendsDto> findAllUsersFriends(Pageable pageable, Long userId);
-
-    /**
-     * Method that finds all friends that send you request.
-     *
-     * @param pageable {@link Pageable}.
-     * @param userId   {@link Long} -current user's id.
-     * @return {@link PageableDto} of {@link RecommendedFriendDto} instances.
-     */
-    PageableDto<UserAllFriendsDto> getAllUserFriendRequests(Long userId, Pageable pageable);
-
-    /**
-     * Method that finds all friends that send you request.
-     *
-     * @param userId {@link Long} -current user's id.
-     * @return {@link List} of {@link UserVO} instances.
-     */
-    List<UserVO> getAllUserFriendRequests(Long userId);
-
-    /**
      * {@inheritDoc}
      */
     PageableAdvancedDto<UserManagementVO> search(Pageable pageable, UserManagementViewDto userManagementViewDto);
@@ -494,40 +384,9 @@ public interface UserService {
     void updateUserLanguage(Long userId, Long languageId);
 
     /**
-     * Method that return UserVo by UUid.
-     *
-     * @return {@link UserVO}
-     * @author Struk Nazar
-     */
-    UbsCustomerDto findByUUid(String uuid);
-
-    /**
-     * Method that mark User Deactivated.
-     *
-     * @author Bratakh Liubomyr
-     */
-    void markUserAsDeactivated(String uuid);
-
-    /**
      * Method find user with admin authority.
      *
      * @author Ihor Volianskyi
      */
     UserVO findAdminById(Long id);
-
-    /**
-     * Method find all users except current user and his friends.
-     *
-     * @author Stepan Omeliukh
-     */
-    PageableDto<UserAllFriendsDto> findAllUsersExceptMainUserAndUsersFriend(Pageable pageable, Long userId);
-
-    /**
-     * Method checks the existence of the user by uuid.
-     *
-     * @param uuid {@link String} - for found user.
-     * @return {@link Boolean}.
-     * @author Maksym Golik
-     */
-    Boolean checkIfUserExistsByUuid(String uuid);
 }
