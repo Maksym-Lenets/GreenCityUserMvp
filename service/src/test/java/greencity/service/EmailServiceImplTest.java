@@ -4,7 +4,6 @@ import greencity.ModelUtils;
 import greencity.dto.category.CategoryDto;
 import greencity.dto.econews.AddEcoNewsDtoResponse;
 import greencity.dto.econews.EcoNewsForSendEmailDto;
-import greencity.dto.eventcomment.EventCommentForSendEmailDto;
 import greencity.dto.newssubscriber.NewsSubscriberResponseDto;
 import greencity.dto.notification.NotificationDto;
 import greencity.dto.place.PlaceNotificationDto;
@@ -98,14 +97,6 @@ class EmailServiceImplTest {
             Collections.singletonList(new NewsSubscriberResponseDto("test@gmail.com", "someUnsubscribeToken"));
         AddEcoNewsDtoResponse addEcoNewsDtoResponse = ModelUtils.getAddEcoNewsDtoResponse();
         service.sendNewNewsForSubscriber(newsSubscriberResponseDtos, addEcoNewsDtoResponse);
-        verify(javaMailSender).createMimeMessage();
-    }
-
-    @Test
-    void sendNewCommentForEventOrganizer() {
-        EventCommentForSendEmailDto dto = new EventCommentForSendEmailDto();
-        dto.setEmail("inna@gmail.com");
-        service.sendNewCommentForEventOrganizer(dto);
         verify(javaMailSender).createMimeMessage();
     }
 

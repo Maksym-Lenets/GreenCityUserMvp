@@ -187,88 +187,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public PageableDto<UserAllFriendsDto> findUsersRecommendedFriends(Pageable pageable, Long userId) {
-        Page<UsersFriendDto> recommendedFriends = userRepo.findUsersRecommendedFriends(pageable, userId);
-
-        Long amountOfAcquiredHabitsByUserId = restClient.findAmountOfAcquiredHabits(userId);
-        Long amountOfHabitsInProgressByUserId = restClient.findAmountOfHabitsInProgress(userId);
-
-        if (recommendedFriends.isEmpty()
-            && amountOfAcquiredHabitsByUserId == 0
-            && amountOfHabitsInProgressByUserId == 0) {
-            List<UsersFriendDto> recommendedFriendsList = userRepo.findAnyRecommendedFriends(userId);
-            int start = Math.min((int) pageable.getOffset(), recommendedFriendsList.size());
-            int end = Math.min((start + pageable.getPageSize()), recommendedFriendsList.size());
-            recommendedFriends = new PageImpl<>(recommendedFriendsList.subList(start, end),
-                pageable, recommendedFriendsList.size());
-        }
-
-        List<UserAllFriendsDto> recommendedFriendsDtos = modelMapper
-            .map(recommendedFriends.getContent(),
-                new TypeToken<List<UserAllFriendsDto>>() {
-                }.getType());
-
-        return new PageableDto<>(
-            allUsersMutualFriendsRecommendedOrRequest(userId, recommendedFriendsDtos),
-            recommendedFriends.getTotalElements(),
-            recommendedFriends.getPageable().getPageNumber(),
-            recommendedFriends.getTotalPages());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PageableDto<UserAllFriendsDto> findAllUsersFriends(Pageable pageable, Long userId) {
-        Page<User> friends = userRepo.getAllUserFriends(userId, pageable);
-        List<UserAllFriendsDto> friendDtos = modelMapper.map(friends.getContent(),
-            new TypeToken<List<UserAllFriendsDto>>() {
-            }.getType());
-        for (UserAllFriendsDto friendDto : friendDtos) {
-            friendDto.setFriendStatus(UserStatusRequest.FRIEND.toString());
-        }
-        friendDtos.stream().forEach(f -> f.setFriendsChatDto(restClient.chatBetweenTwo(f.getId(), userId)));
-        return new PageableDto<>(
-            allUsersMutualFriendsMethod(friendDtos),
-            friends.getTotalElements(),
-            friends.getPageable().getPageNumber(),
-            friends.getTotalPages());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional
-    public PageableDto<UserAllFriendsDto> getAllUserFriendRequests(Long userId, Pageable pageable) {
-        Page<User> friendsRequests = userRepo.getAllUserFriendRequests(userId, pageable);
-        List<UserAllFriendsDto> friendDtos = modelMapper.map(friendsRequests.getContent(),
-            new TypeToken<List<UserAllFriendsDto>>() {
-            }.getType());
-        for (UserAllFriendsDto friendDto : friendDtos) {
-            friendDto.setFriendStatus(UserStatusRequest.REQUEST.toString());
-        }
-        return new PageableDto<>(
-            allUsersMutualFriendsRecommendedOrRequest(userId, friendDtos),
-            friendsRequests.getTotalElements(),
-            friendsRequests.getPageable().getPageNumber(),
-            friendsRequests.getTotalPages());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<UserVO> getAllUserFriendRequests(Long userId) {
-        List<User> allUserFriends = userRepo.getAllUserFriendRequests(userId);
-        return modelMapper.map(allUserFriends, new TypeToken<List<UserVO>>() {
-        }.getType());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public PageableAdvancedDto<UserManagementVO> search(Pageable pageable,
         UserManagementViewDto userManagementViewDto) {
         Page<User> found = userRepo.findAll(buildSpecification(userManagementViewDto), pageable);
@@ -485,22 +403,6 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public void updateEmployeeEmail(String newEmployeeEmail, String uuid) {
-        User user = userRepo.findUserByUuid(uuid).orElseThrow(
-            () -> new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND_BY_UUID + uuid));
-        if (!user.getEmail().equals(newEmployeeEmail)) {
-            if (userRepo.existsUserByEmail(newEmployeeEmail)) {
-                throw new BadRequestException("This email is already in use");
-            }
-            user.setEmail(newEmployeeEmail);
-            userRepo.save(user);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public int updateUserRefreshToken(String refreshTokenKey, Long id) {
         return userRepo.updateUserRefreshToken(refreshTokenKey, id);
     }
@@ -611,48 +513,6 @@ public class UserServiceImpl implements UserService {
         userRepo.save(user);
     }
 
-    /**
-     * Get six friends with the highest rating {@link UserVO}.
-     *
-     * @param userId {@link Long}
-     * @author Marian Datsko
-     */
-    @Override
-    public List<UserProfilePictureDto> getSixFriendsWithTheHighestRating(Long userId) {
-        List<UserProfilePictureDto> userProfilePictureDtoList = userRepo.getSixFriendsWithTheHighestRating(userId)
-            .stream()
-            .map(user -> modelMapper.map(user, UserProfilePictureDto.class))
-            .collect(Collectors.toList());
-        if (userProfilePictureDtoList.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.NOT_FOUND_ANY_FRIENDS + userId.toString());
-        }
-        return userProfilePictureDtoList;
-    }
-
-    /**
-     * Get six friends with the highest rating {@link UserVO}. by page.
-     *
-     * @param userId {@link Long}
-     * @return {@link SixFriendsPageResponceDto}.
-     * @author Oleh Bilonizhka
-     */
-    @Override
-    public SixFriendsPageResponceDto getSixFriendsWithTheHighestRatingPaged(Long userId) {
-        Pageable pageable = PageRequest.of(0, 6);
-        List<User> users = userRepo.getSixFriendsWithTheHighestRating(userId);
-        Page<User> pageUsers = new PageImpl<>(users, pageable, users.size());
-
-        List<UserProfilePictureDto> userProfilePictureDtoList = users
-            .stream()
-            .map(user -> modelMapper.map(user, UserProfilePictureDto.class))
-            .collect(Collectors.toList());
-
-        return SixFriendsPageResponceDto.builder()
-            .pagedFriends(getPageableDto(userProfilePictureDtoList,
-                pageUsers))
-            .amountOfFriends(userRepo.getAllUserFriendsCount(userId)).build();
-    }
-
     private PageableDto<UserProfilePictureDto> getPageableDto(
         List<UserProfilePictureDto> userProfilePictureDtoList, Page<User> pageUsers) {
         return new PageableDto<>(
@@ -758,61 +618,6 @@ public class UserServiceImpl implements UserService {
             .amountPublishedNews(amountOfPublishedNewsByUserId)
             .amountHabitsAcquired(amountOfAcquiredHabitsByUserId)
             .amountHabitsInProgress(amountOfHabitsInProgressByUserId)
-            .build();
-    }
-
-    /**
-     * Get user and six friends with the online status {@link UserVO}.
-     *
-     * @param userId {@link Long}
-     * @author Yurii Zhurakovskyi
-     */
-    @Override
-    public UserAndFriendsWithOnlineStatusDto getUserAndSixFriendsWithOnlineStatus(Long userId) {
-        UserWithOnlineStatusDto userWithOnlineStatusDto = UserWithOnlineStatusDto.builder()
-            .id(userId)
-            .onlineStatus(checkIfTheUserIsOnline(userId))
-            .build();
-        List<User> sixFriendsWithTheHighestRating = userRepo.getSixFriendsWithTheHighestRating(userId);
-        List<UserWithOnlineStatusDto> sixFriendsWithOnlineStatusDtos = new ArrayList<>();
-        if (!sixFriendsWithTheHighestRating.isEmpty()) {
-            sixFriendsWithOnlineStatusDtos = sixFriendsWithTheHighestRating
-                .stream()
-                .map(u -> new UserWithOnlineStatusDto(u.getId(), checkIfTheUserIsOnline(u.getId())))
-                .collect(Collectors.toList());
-        }
-        return UserAndFriendsWithOnlineStatusDto.builder()
-            .user(userWithOnlineStatusDto)
-            .friends(sixFriendsWithOnlineStatusDtos)
-            .build();
-    }
-
-    /**
-     * Get user and all friends with the online status {@link UserVO} by page.
-     *
-     * @param userId   {@link Long}
-     * @param pageable {@link Pageable }
-     * @author Yurii Zhurakovskyi
-     */
-    @Override
-    public UserAndAllFriendsWithOnlineStatusDto getAllFriendsWithTheOnlineStatus(Long userId, Pageable pageable) {
-        UserWithOnlineStatusDto userWithOnlineStatusDto = UserWithOnlineStatusDto.builder()
-            .id(userId)
-            .onlineStatus(checkIfTheUserIsOnline(userId))
-            .build();
-        Page<User> friends = userRepo.getAllUserFriends(userId, pageable);
-        List<UserWithOnlineStatusDto> friendsWithOnlineStatusDtos = new ArrayList<>();
-        if (!friends.isEmpty()) {
-            friendsWithOnlineStatusDtos = friends
-                .getContent()
-                .stream()
-                .map(u -> new UserWithOnlineStatusDto(u.getId(), checkIfTheUserIsOnline(u.getId())))
-                .collect(Collectors.toList());
-        }
-        return UserAndAllFriendsWithOnlineStatusDto.builder()
-            .user(userWithOnlineStatusDto)
-            .friends(new PageableDto<>(friendsWithOnlineStatusDtos, friends.getTotalElements(),
-                friends.getPageable().getPageNumber(), friends.getTotalPages()))
             .build();
     }
 
@@ -963,89 +768,6 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAllUsersCities();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PageableDto<UserAllFriendsDto> findNewFriendByName(String name, Pageable page, Long id) {
-        Page<User> ourUsersList = userRepo.findUsersByName(name, page, id);
-        return getUserAllFriendsDtoPageableDto(id, ourUsersList);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PageableDto<UserAllFriendsDto> findUserByName(String name, Pageable page, Long id) {
-        Page<User> ourUsersList = userRepo.findAllUsersByName(name, page, id);
-        return getUserAllFriendsDtoPageableDto(id, ourUsersList);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PageableDto<UserAllFriendsDto> findFriendByName(String name, Pageable page, Long id) {
-        Page<User> ourUsersList = userRepo.findFriendsByName(name, page, id);
-        return getUserAllFriendsDtoPageableDto(id, ourUsersList);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Map<Integer, Long> findAllRegistrationMonthsMap() {
-        return userRepo.findAllRegistrationMonthsMap();
-    }
-
-    private List<UserAllFriendsDto> allUsersMutualFriendsMethod(List<UserAllFriendsDto> userAllFriends) {
-        for (UserAllFriendsDto friendCurrentUser : userAllFriends) {
-            long mutualFriends = 0;
-            List<User> allFriendsCurrentUser = userRepo.getAllUserFriends(friendCurrentUser.getId());
-            for (User friendUser : allFriendsCurrentUser) {
-                for (UserAllFriendsDto user : userAllFriends) {
-                    if (friendUser.getId().equals(user.getId())) {
-                        mutualFriends++;
-                    }
-                }
-            }
-            friendCurrentUser.setMutualFriends(mutualFriends);
-        }
-        return userAllFriends;
-    }
-
-    private List<UserAllFriendsDto> allUsersMutualFriendsRecommendedOrRequest(Long id,
-        List<UserAllFriendsDto> recommendedFriends) {
-        List<User> allUserFriends = userRepo.getAllUserFriends(id);
-        for (UserAllFriendsDto currentFriend : recommendedFriends) {
-            long mutualFriendsCount = 0;
-            List<User> allCurrentUserFriends = userRepo.getAllUserFriends(currentFriend.getId());
-            for (User friendUser : allCurrentUserFriends) {
-                for (User user : allUserFriends) {
-                    if (friendUser.getId().equals(user.getId())) {
-                        mutualFriendsCount++;
-                    }
-                }
-            }
-            currentFriend.setMutualFriends(mutualFriendsCount);
-        }
-        return recommendedFriends;
-    }
-
-    @Override
-    public UbsCustomerDto findByUUid(String uuid) {
-        Optional<User> optionalUser = userRepo.findUserByUuid(uuid);
-        return optionalUser.isEmpty() ? null : modelMapper.map(optionalUser.get(), UbsCustomerDto.class);
-    }
-
-    @Override
-    public void markUserAsDeactivated(String uuid) {
-        User user = userRepo.findUserByUuid(uuid).orElseThrow(
-            () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_UUID));
-        user.setUserStatus(UserStatus.DEACTIVATED);
-        userRepo.save(user);
-    }
-
     @Override
     public UserVO findAdminById(Long id) {
         User user = userRepo.findById(id)
@@ -1058,37 +780,5 @@ public class UserServiceImpl implements UserService {
         }
 
         throw new LowRoleLevelException("You do not have authorities");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return
-     */
-    @Override
-    public PageableDto<UserAllFriendsDto> findAllUsersExceptMainUserAndUsersFriend(Pageable pageable, Long userId) {
-        Page<User> allUsers = userRepo.getAllUsersExceptMainUserAndFriends(pageable, userId);
-        return getUserAllFriendsDtoPageableDto(userId, allUsers);
-    }
-
-    private PageableDto<UserAllFriendsDto> getUserAllFriendsDtoPageableDto(Long userId, Page<User> allUsers) {
-        List<UserAllFriendsDto> allFriends = modelMapper
-            .map(allUsers.getContent(),
-                new TypeToken<List<UserAllFriendsDto>>() {
-                }.getType());
-        allFriends.forEach(f -> f.setFriendsChatDto(restClient.chatBetweenTwo(f.getId(), userId)));
-        return new PageableDto<>(
-            allUsersMutualFriendsRecommendedOrRequest(userId, allFriends),
-            allUsers.getTotalElements(),
-            allUsers.getPageable().getPageNumber(),
-            allUsers.getTotalPages());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Boolean checkIfUserExistsByUuid(String uuid) {
-        return userRepo.findUserByUuid(uuid).isPresent();
     }
 }
