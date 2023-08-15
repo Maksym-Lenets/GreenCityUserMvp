@@ -43,7 +43,6 @@ class RestClientTest {
     @InjectMocks
     private RestClient restClient;
 
-
     @Test
     void getAllAvailableCustomShoppingListItems() {
         String accessToken = "accessToken";

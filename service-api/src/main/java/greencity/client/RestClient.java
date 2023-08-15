@@ -41,7 +41,6 @@ public class RestClient {
     @Value("${greencityubs.server.address}")
     private String greenCityUbsServerAddress;
 
-
     /**
      * Method for finding all custom shopping list items.
      *

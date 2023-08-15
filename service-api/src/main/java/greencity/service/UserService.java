@@ -66,7 +66,6 @@ public interface UserService {
      */
     UserVO findById(Long id);
 
-
     /**
      * Method that allow you to delete {@link UserVO} by ID.
      *
