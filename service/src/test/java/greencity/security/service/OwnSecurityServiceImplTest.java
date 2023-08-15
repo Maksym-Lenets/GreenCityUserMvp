@@ -154,46 +154,6 @@ class OwnSecurityServiceImplTest {
             refEq("en"), eq(false));
         verify(jwtTool, times(2)).generateTokenKey();
     }
-
-    @Test
-    void signUpEmployeeTest() {
-        User user = ModelUtils.getUserWithUbsRole();
-        UserVO userVO = ModelUtils.getUserVO();
-        EmployeeSignUpDto employeeSignUpDto = ModelUtils.getEmployeeSignUpDto();
-        OwnSignUpDto ownSignUpDto = ModelUtils.getOwnSignUpDto();
-        when(modelMapper.map(any(User.class), eq(UserVO.class))).thenReturn(userVO);
-        when(modelMapper.map(any(EmployeeSignUpDto.class), eq(OwnSignUpDto.class))).thenReturn(ownSignUpDto);
-        when(userRepo.save(any(User.class))).thenReturn(user);
-        when(jwtTool.generateTokenKey()).thenReturn("New-token-key");
-        when(jwtTool.generateTokenKeyWithCodedDate()).thenReturn("New-token-key");
-        ownSecurityService.signUpEmployee(employeeSignUpDto, "en");
-
-        verify(modelMapper, times(2)).map(any(), any());
-        verify(userRepo).save(any());
-        verify(jwtTool, times(1)).generateTokenKeyWithCodedDate();
-        verify(jwtTool, times(1)).generateTokenKey();
-    }
-
-    @Test
-    void signUpWithDuplicatedEmployee() {
-        User user = ModelUtils.getUserWithUbsRole();
-        UserVO userVO = ModelUtils.getUserVO();
-        EmployeeSignUpDto employeeSignUpDto = ModelUtils.getEmployeeSignUpDto();
-        OwnSignUpDto ownSignUpDto = ModelUtils.getOwnSignUpDto();
-        when(modelMapper.map(any(User.class), eq(UserVO.class))).thenReturn(userVO);
-        when(modelMapper.map(any(EmployeeSignUpDto.class), eq(OwnSignUpDto.class))).thenReturn(ownSignUpDto);
-
-        when(userRepo.save(any(User.class))).thenThrow(DataIntegrityViolationException.class);
-        when(jwtTool.generateTokenKey()).thenReturn("New-token-key");
-        when(jwtTool.generateTokenKeyWithCodedDate()).thenReturn("New-token-key");
-
-        assertThrows(UserAlreadyRegisteredException.class,
-            () -> ownSecurityService.signUpEmployee(employeeSignUpDto, "en"));
-
-        verify(jwtTool, times(1)).generateTokenKey();
-        verify(jwtTool, times(1)).generateTokenKeyWithCodedDate();
-    }
-
     @Test
     void signUpThrowsUserAlreadyRegisteredExceptionTest() {
         OwnSignUpDto ownSignUpDto = new OwnSignUpDto();

@@ -79,6 +79,7 @@
                 </executions>
                 <configuration>
                     <configFile>${project.basedir}/../formatter.xml</configFile>
+                    <lineEnding>LF</lineEnding>
                 </configuration>
             </plugin>
             <plugin>

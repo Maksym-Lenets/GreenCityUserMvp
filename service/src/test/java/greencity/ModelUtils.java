@@ -48,7 +48,7 @@ public class ModelUtils {
     public static final OwnRestoreDto TEST_OWN_RESTORE_DTO_WRONG = createOwnRestoreDtoWrong();
     public static final UserProfileStatisticsDto USER_PROFILE_STATISTICS_DTO = createUserProfileStatisticsDto();
     public static final UserManagementDto CREATE_USER_MANAGER_DTO = createUserManagerDto();
-    public static final List<UserAllFriendsDto> CREATE_USER_ALL_FRIENDS_DTO = createUserAllFriendsDto();
+
     public static final String TEST_EMAIL = "taras@gmail.com";
 
     private static UserManagementDto createUserManagerDto() {
@@ -78,35 +78,6 @@ public class ModelUtils {
             .build();
     }
 
-    private static List<UserAllFriendsDto> createUserAllFriendsDto() {
-        List<UserAllFriendsDto> list = new ArrayList<>();
-
-        list.add(UserAllFriendsDto.builder()
-            .id(1L)
-            .name("Martin")
-            .city("New-York")
-            .rating(30.00)
-            .mutualFriends(11L)
-            .profilePicturePath("Picture")
-            .build());
-        list.add(UserAllFriendsDto.builder()
-            .id(1L)
-            .name("Martin")
-            .city("New-York")
-            .rating(30.00)
-            .mutualFriends(11L)
-            .profilePicturePath("Picture")
-            .build());
-        list.add(UserAllFriendsDto.builder()
-            .id(1L)
-            .name("Martin")
-            .city("New-York")
-            .rating(30.00)
-            .mutualFriends(11L)
-            .profilePicturePath("Picture")
-            .build());
-        return list;
-    }
 
     public static UserEmployeeAuthorityDto getUserEmployeeAuthorityDto() {
         return UserEmployeeAuthorityDto.builder()
