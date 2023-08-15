@@ -78,7 +78,6 @@ public class ModelUtils {
             .build();
     }
 
-
     public static UserEmployeeAuthorityDto getUserEmployeeAuthorityDto() {
         return UserEmployeeAuthorityDto.builder()
             .employeeEmail("taras@gmail.com")
