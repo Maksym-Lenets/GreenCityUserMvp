@@ -457,6 +457,7 @@ class UserControllerTest {
             .andExpect(jsonPath("$[0].id").value(1L))
             .andExpect(jsonPath("$[0].email").value(TestConst.EMAIL));
     }
+
     @Test
     void createUbsRecordTest() throws Exception {
         Principal principal = mock(Principal.class);
@@ -483,6 +484,7 @@ class UserControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").value(1L));
     }
+
     @Test
     void updateUserLanguageTest() throws Exception {
         Principal principal = mock(Principal.class);

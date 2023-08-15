@@ -154,6 +154,7 @@ class OwnSecurityServiceImplTest {
             refEq("en"), eq(false));
         verify(jwtTool, times(2)).generateTokenKey();
     }
+
     @Test
     void signUpThrowsUserAlreadyRegisteredExceptionTest() {
         OwnSignUpDto ownSignUpDto = new OwnSignUpDto();
