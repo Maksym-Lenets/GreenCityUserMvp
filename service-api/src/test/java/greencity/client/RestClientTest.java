@@ -62,7 +62,6 @@ class RestClientTest {
             restClient.getAllAvailableCustomShoppingListItems(userId, habitId));
     }
 
-
     @Test
     void uploadImage() throws IOException {
         String imagePath = "image";

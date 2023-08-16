@@ -53,7 +53,6 @@ public class RestClient {
         return Arrays.asList(responseDtos);
     }
 
-
     /**
      * Method for uploading an image.
      *
@@ -74,8 +73,6 @@ public class RestClient {
         return restTemplate.postForObject(greenCityServerAddress
             + RestTemplateLinks.FILES_IMAGE, requestEntity, String.class);
     }
-
-
 
     /**
      * The method find count of published eco news.
@@ -130,7 +127,6 @@ public class RestClient {
         assert restTemplateForObject != null;
         return Arrays.asList(restTemplateForObject);
     }
-
 
     /**
      * Method makes headers for RestTemplate.
