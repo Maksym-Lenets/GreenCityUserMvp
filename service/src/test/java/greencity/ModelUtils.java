@@ -199,12 +199,6 @@ public class ModelUtils {
             .name("Name")
             .city("City")
             .userCredo("userCredo")
-            .socialNetworks(List.of(
-                "https://www.facebook.com",
-                "https://www.instagram.com",
-                "https://www.youtube.com",
-                "https://www.gmail.com",
-                "https://www.google.com"))
             .showLocation(true)
             .showEcoPlace(true)
             .showShoppingList(true)

@@ -35,8 +35,6 @@ public class RestClient {
     @Value("${greencity.server.address}")
     private String greenCityServerAddress;
     private final HttpServletRequest httpServletRequest;
-    @Value("${greencityubs.server.address}")
-    private String greenCityUbsServerAddress;
 
     /**
      * Method for finding all custom shopping list items.

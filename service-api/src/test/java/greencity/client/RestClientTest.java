@@ -36,8 +36,6 @@ class RestClientTest {
     private HttpServletRequest httpServletRequest;
     @Value("${greencity.server.address}")
     private String greenCityServerAddress;
-    @Value("${greencityubs.server.address}")
-    private String greenCityUbsServerAddress;
     @InjectMocks
     private RestClient restClient;
 
