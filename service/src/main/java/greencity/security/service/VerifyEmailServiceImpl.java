@@ -48,8 +48,6 @@ public class VerifyEmailServiceImpl implements VerifyEmailService {
             userRepo.save(user);
             log.info("User has successfully verify the email by token {}. Records deleted {}.", token, rows);
             UbsProfileCreationDto ubsProfile = modelMapper.map(user, UbsProfileCreationDto.class);
-            Long ubsProfileId = restClient.createUbsProfile(ubsProfile);
-            log.info("Ubs profile with id {} has been created for user with uuid {}.", ubsProfileId, user.getUuid());
             return true;
         } else {
             log.info("User didn't verify his/her email on time with token {}.", token);

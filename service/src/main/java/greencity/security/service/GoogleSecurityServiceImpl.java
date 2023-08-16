@@ -98,7 +98,6 @@ public class GoogleSecurityServiceImpl implements GoogleSecurityService {
                         savedUser.setId(id);
                         return savedUser;
                     });
-                    restClient.createUbsProfile(modelMapper.map(user, UbsProfileCreationDto.class));
                     userVO = modelMapper.map(user, UserVO.class);
                     log.info("Google sign-up and sign-in user - {}", userVO.getEmail());
                     return getSuccessSignInDto(userVO);

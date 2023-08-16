@@ -104,19 +104,13 @@ public class ModelUtils {
             .build();
     }
 
-    public static User getUserWithSocialNetworks() {
-        List<SocialNetwork> socialNetwork = new ArrayList<>();
-        socialNetwork.add(SocialNetwork.builder()
-            .id(1L)
-            .url("https://www.facebook.com")
-            .build());
+    public static User getUserWithoutSocialNetworks() {
         return User.builder()
             .id(1L)
             .email(TestConst.EMAIL)
             .name(TestConst.NAME)
             .role(Role.ROLE_USER)
             .language(ModelUtils.getLanguage())
-            .socialNetworks(socialNetwork)
             .lastActivityTime(LocalDateTime.now())
             .verifyEmail(new VerifyEmail())
             .dateOfRegistration(LocalDateTime.now())

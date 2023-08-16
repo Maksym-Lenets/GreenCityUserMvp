@@ -94,7 +94,6 @@ class GoogleSecurityServiceImplTest {
         when(modelMapper.map(any(), eq(UserVO.class))).thenReturn(userVO);
         when(userRepo.save(any())).thenReturn(user);
         when(modelMapper.map(user, UbsProfileCreationDto.class)).thenReturn(UbsProfileCreationDto.builder().build());
-        when(restClient.createUbsProfile(any(UbsProfileCreationDto.class))).thenReturn(1L);
         SuccessSignInDto result =
             googleSecurityService.authenticate("1234", "ua");
         assertNull(result.getUserId());
