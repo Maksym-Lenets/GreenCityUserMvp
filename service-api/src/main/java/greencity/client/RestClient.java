@@ -2,8 +2,6 @@ package greencity.client;
 
 import greencity.constant.RestTemplateLinks;
 import greencity.dto.shoppinglist.CustomShoppingListItemResponseDto;
-import greencity.dto.socialnetwork.SocialNetworkImageVO;
-import greencity.dto.ubs.UbsProfileCreationDto;
 import greencity.dto.user.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

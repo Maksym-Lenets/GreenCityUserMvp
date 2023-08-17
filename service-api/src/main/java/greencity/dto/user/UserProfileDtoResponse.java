@@ -1,8 +1,5 @@
 package greencity.dto.user;
 
-import greencity.dto.socialnetwork.SocialNetworkResponseDTO;
-import java.util.List;
-
 import greencity.enums.Role;
 import lombok.*;
 
@@ -17,7 +14,6 @@ public class UserProfileDtoResponse {
     private String name;
     private String city;
     private String userCredo;
-    private List<SocialNetworkResponseDTO> socialNetworks;
     private Boolean showLocation;
     private Boolean showEcoPlace;
     private Boolean showShoppingList;
