@@ -328,27 +328,6 @@ public class UserController {
     }
 
     /**
-     * Method for save user profile information {@link UserProfileDtoResponse}.
-     *
-     * @param userProfileDtoRequest - dto for {@link UserVO} entity.
-     * @return dto {@link UserProfileDtoResponse} instance.
-     * @author Marian Datsko.
-     */
-    @ApiOperation(value = "Save user profile information")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = HttpStatuses.OK),
-        @ApiResponse(code = 303, message = HttpStatuses.SEE_OTHER),
-        @ApiResponse(code = 401, message = HttpStatuses.UNAUTHORIZED),
-    })
-    @PutMapping(path = "/profile")
-    public ResponseEntity<String> save(
-        @ApiParam(required = true) @RequestBody @Valid UserProfileDtoRequest userProfileDtoRequest,
-        @ApiIgnore Principal principal) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.saveUserProfile(userProfileDtoRequest,
-            principal.getName()));
-    }
-
-    /**
      * Method returns user profile information.
      *
      * @return {@link UserProfileDtoResponse}.

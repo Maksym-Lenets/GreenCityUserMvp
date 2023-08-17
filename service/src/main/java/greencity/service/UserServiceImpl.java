@@ -1,12 +1,10 @@
 package greencity.service;
 
 import greencity.constant.UpdateConstants;
-import greencity.dto.UbsCustomerDto;
 import greencity.dto.ubs.UbsTableCreationDto;
 import greencity.dto.user.*;
 import greencity.entity.Language;
 import greencity.entity.UserDeactivationReason;
-import greencity.enums.UserStatusRequest;
 import greencity.filters.SearchCriteria;
 import greencity.client.RestClient;
 import greencity.constant.ErrorMessage;
@@ -14,10 +12,7 @@ import greencity.constant.LogMessage;
 import greencity.dto.PageableAdvancedDto;
 import greencity.dto.PageableDto;
 import greencity.dto.filter.FilterUserDto;
-import greencity.dto.friends.SixFriendsPageResponceDto;
 import greencity.dto.shoppinglist.CustomShoppingListItemResponseDto;
-import greencity.entity.SocialNetwork;
-import greencity.entity.SocialNetworkImage;
 import greencity.entity.User;
 import greencity.entity.VerifyEmail;
 import greencity.enums.EmailNotification;
@@ -35,10 +30,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -520,38 +512,6 @@ public class UserServiceImpl implements UserService {
             pageUsers.getTotalElements(),
             pageUsers.getPageable().getPageNumber(),
             pageUsers.getTotalPages());
-    }
-
-    /**
-     * Save user profile information {@link UserVO}.
-     *
-     * @author Marian Datsko
-     */
-    @Override
-    public String saveUserProfile(UserProfileDtoRequest userProfileDtoRequest, String email) {
-        User user = userRepo
-            .findByEmail(email)
-            .orElseThrow(() -> new WrongEmailException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
-        user.setName(userProfileDtoRequest.getName());
-        user.setCity(userProfileDtoRequest.getCity());
-        user.setUserCredo(userProfileDtoRequest.getUserCredo());
-        List<SocialNetwork> socialNetworks = user.getSocialNetworks();
-        socialNetworks.forEach(socialNetwork -> restClient.deleteSocialNetwork(socialNetwork.getId()));
-        user.getSocialNetworks().clear();
-        user.getSocialNetworks().addAll(userProfileDtoRequest.getSocialNetworks()
-            .stream()
-            .map(url -> SocialNetwork.builder()
-                .url(url)
-                .user(user)
-                .socialNetworkImage(modelMapper.map(restClient.getSocialNetworkImageByUrl(url),
-                    SocialNetworkImage.class))
-                .build())
-            .collect(Collectors.toList()));
-        user.setShowLocation(userProfileDtoRequest.getShowLocation());
-        user.setShowEcoPlace(userProfileDtoRequest.getShowEcoPlace());
-        user.setShowShoppingList(userProfileDtoRequest.getShowShoppingList());
-        userRepo.save(user);
-        return UpdateConstants.getResultByLanguageCode(user.getLanguage().getCode());
     }
 
     /**

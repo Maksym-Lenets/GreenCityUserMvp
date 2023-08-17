@@ -260,13 +260,6 @@ public interface UserService {
     void deleteUserProfilePicture(String email);
 
     /**
-     * Save user profile information {@link UserVO}.
-     *
-     * @author Marian Datsko
-     */
-    String saveUserProfile(UserProfileDtoRequest userProfileDtoRequest, String name);
-
-    /**
      * Updates last activity time for a given user.
      *
      * @param userId               - {@link UserVO}'s id

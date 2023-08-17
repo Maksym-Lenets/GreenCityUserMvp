@@ -82,7 +82,6 @@ class UserServiceImplTest {
         .emailNotification(EmailNotification.DISABLED)
         .lastActivityTime(LocalDateTime.of(2020, 10, 10, 20, 10, 10))
         .dateOfRegistration(LocalDateTime.now())
-        .socialNetworks(new ArrayList<>())
         .build();
 
     private User user1 = User.builder()
@@ -99,7 +98,6 @@ class UserServiceImplTest {
         .emailNotification(EmailNotification.DISABLED)
         .lastActivityTime(LocalDateTime.of(2020, 10, 10, 20, 10, 10))
         .dateOfRegistration(LocalDateTime.now())
-        .socialNetworks(new ArrayList<>())
         .build();
     private User user2 = User.builder()
         .id(2L)
@@ -478,27 +476,6 @@ class UserServiceImplTest {
             userPages.isFirst(),
             userPages.isLast());
         assertEquals(pageableAdvancedDto, userService.searchBy(pageable, "query"));
-    }
-
-    @Test
-    void saveUserProfileTest() {
-        var request = ModelUtils.getUserProfileDtoRequest();
-        var user = ModelUtils.getUserWithSocialNetworks();
-        when(userRepo.findByEmail("test@gmail.com")).thenReturn(Optional.of(user));
-        when(userRepo.save(user)).thenReturn(user);
-        assertEquals(UpdateConstants.SUCCESS_EN, userService.saveUserProfile(request, "test@gmail.com"));
-        verify(userRepo).findByEmail("test@gmail.com");
-        verify(userRepo).save(user);
-    }
-
-    @Test
-    void saveUserProfileThrowWrongEmailExceptionTest() {
-        var request = UserProfileDtoRequest.builder().build();
-        when(userRepo.findByEmail(anyString())).thenReturn(Optional.empty());
-        Exception thrown = assertThrows(WrongEmailException.class,
-            () -> userService.saveUserProfile(request, "test@gmail.com"));
-        assertEquals(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + "test@gmail.com", thrown.getMessage());
-        verify(userRepo).findByEmail(anyString());
     }
 
     @Test

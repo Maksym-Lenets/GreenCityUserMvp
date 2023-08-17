@@ -21,7 +21,6 @@ import greencity.dto.violation.UserViolationMailDto;
 import greencity.entity.Language;
 import greencity.entity.OwnSecurity;
 import greencity.entity.RestorePasswordEmail;
-import greencity.entity.SocialNetwork;
 import greencity.entity.User;
 import greencity.entity.VerifyEmail;
 import greencity.enums.EmailNotification;
@@ -98,25 +97,6 @@ public class ModelUtils {
             .email(TestConst.EMAIL)
             .name(TestConst.NAME)
             .role(Role.ROLE_USER)
-            .lastActivityTime(LocalDateTime.now())
-            .verifyEmail(new VerifyEmail())
-            .dateOfRegistration(LocalDateTime.now())
-            .build();
-    }
-
-    public static User getUserWithSocialNetworks() {
-        List<SocialNetwork> socialNetwork = new ArrayList<>();
-        socialNetwork.add(SocialNetwork.builder()
-            .id(1L)
-            .url("https://www.facebook.com")
-            .build());
-        return User.builder()
-            .id(1L)
-            .email(TestConst.EMAIL)
-            .name(TestConst.NAME)
-            .role(Role.ROLE_USER)
-            .language(ModelUtils.getLanguage())
-            .socialNetworks(socialNetwork)
             .lastActivityTime(LocalDateTime.now())
             .verifyEmail(new VerifyEmail())
             .dateOfRegistration(LocalDateTime.now())

@@ -323,38 +323,6 @@ class UserControllerTest {
     }
 
     @Test
-    void saveTest() throws Exception {
-        Principal principal = mock(Principal.class);
-        when(principal.getName()).thenReturn("testName");
-
-        String json = "{\n"
-            + "\t\"name\": \"testName\",\n"
-            + "\t\"city\": \"city\",\n"
-            + "\t\"userCredo\": \"credo\",\n"
-            + "\t\"socialNetworks\": [],\n"
-            + "\t\"showLocation\": true,\n"
-            + "\t\"showEcoPlace\": true,\n"
-            + "\t\"showShoppingList\": false\n"
-            + "}";
-        String accessToken = "accessToken";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTHORIZATION, accessToken);
-
-        this.mockMvc.perform(put(userLink + "/profile")
-            .headers(headers)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json)
-            .param("accessToken", "accessToken")
-            .principal(principal))
-            .andExpect(status().isOk());
-
-        ObjectMapper mapper = new ObjectMapper();
-        UserProfileDtoRequest dto = mapper.readValue(json, UserProfileDtoRequest.class);
-
-        verify(userService).saveUserProfile(dto, "testName");
-    }
-
-    @Test
     void searchTest() throws Exception {
         Pageable pageable = PageRequest.of(0, 20);
         UserManagementViewDto userViewDto =

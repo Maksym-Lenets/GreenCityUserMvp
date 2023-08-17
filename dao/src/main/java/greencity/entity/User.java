@@ -113,10 +113,6 @@ public class User {
     @Column(name = "user_credo")
     private String userCredo;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    @Column(name = "social_networks")
-    private List<SocialNetwork> socialNetworks;
-
     @Column(name = "show_location")
     private Boolean showLocation;
 

@@ -105,16 +105,6 @@ class CustomExceptionHandlerTest {
     }
 
     @Test
-    void testHandleBadSocialNetworkLinkException() {
-        BadSocialNetworkLinksException badSocialNetworkLinksException = new BadSocialNetworkLinksException("test");
-        ExceptionResponse exceptionResponse = new ExceptionResponse(objectMap);
-        when(errorAttributes.getErrorAttributes(webRequest, true)).thenReturn(objectMap);
-        assertEquals(
-            customExceptionHandler.handleBadSocialNetworkLinkException(badSocialNetworkLinksException, webRequest),
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse));
-    }
-
-    @Test
     void testHandleBadRefreshTokenException() {
         ExceptionResponse exceptionResponse = new ExceptionResponse(objectMap);
         when(errorAttributes.getErrorAttributes(webRequest, true)).thenReturn(objectMap);

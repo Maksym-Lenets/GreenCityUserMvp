@@ -13,12 +13,8 @@ public final class ErrorMessage {
     public static final String FRIEND_EXISTS = "Friend with this id has already been added : ";
     public static final String NOT_FOUND_REQUEST = "Not found friend request from user with id: ";
     public static final String NOT_FOUND_ANY_FRIENDS = "Not found any friends by id: ";
-    public static final String USER_CANNOT_ADD_MORE_THAN_5_SOCIAL_NETWORK_LINKS =
-        "User cannot add more than 5 social network links";
     public static final String INVALID_URI = "The string could not be parsed as a URI reference.";
     public static final String MALFORMED_URL = "Malformed URL. The string could not be parsed.";
-    public static final String USER_CANNOT_ADD_SAME_SOCIAL_NETWORK_LINKS =
-        "User cannot add the same social network links";
     public static final String USER_DEACTIVATED = "User is deactivated";
     public static final String BAD_GOOGLE_TOKEN = "Bad google token";
     public static final String BAD_FACEBOOK_TOKEN = "Bad facebook token";
