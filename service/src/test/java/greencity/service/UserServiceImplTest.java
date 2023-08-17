@@ -93,7 +93,6 @@ class UserServiceImplTest {
         .emailNotification(EmailNotification.DISABLED)
         .lastActivityTime(LocalDateTime.of(2020, 10, 10, 20, 10, 10))
         .dateOfRegistration(LocalDateTime.now())
-        .socialNetworks(new ArrayList<>())
         .build();
     private User user2 = User.builder()
         .id(2L)
