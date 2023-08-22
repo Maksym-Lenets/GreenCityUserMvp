@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,9 +27,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
@@ -112,10 +109,6 @@ public class User {
 
     @Column(name = "user_credo")
     private String userCredo;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    @Column(name = "social_networks")
-    private List<SocialNetwork> socialNetworks;
 
     @Column(name = "show_location")
     private Boolean showLocation;

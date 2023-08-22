@@ -50,12 +50,10 @@ class VerifyEmailServiceImplTest {
         when(verifyEmailRepo.findByTokenAndUserId(1L, "token")).thenReturn(Optional.of(verifyEmail));
         when(userRepo.findById(1L)).thenReturn(Optional.of(user));
         when(modelMapper.map(user, UbsProfileCreationDto.class)).thenReturn(ubsProfile);
-        doReturn(1L).when(restClient).createUbsProfile(ubsProfile);
         when(userRepo.save(any(User.class))).thenReturn(user);
         verifyEmailService.verifyByToken(1L, "token");
         verify(verifyEmailRepo, times(1)).deleteVerifyEmailByTokenAndUserId(1L, "token");
         verify(userRepo, times(1)).findById(1L);
-        verify(restClient, times(1)).createUbsProfile(ubsProfile);
     }
 
     @Test

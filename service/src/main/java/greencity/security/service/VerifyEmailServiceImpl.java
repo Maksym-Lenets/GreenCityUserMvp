@@ -1,6 +1,5 @@
 package greencity.security.service;
 
-import greencity.client.RestClient;
 import greencity.constant.ErrorMessage;
 import greencity.dto.ubs.UbsProfileCreationDto;
 import greencity.entity.User;
@@ -28,7 +27,6 @@ import java.time.LocalDateTime;
 public class VerifyEmailServiceImpl implements VerifyEmailService {
     private final VerifyEmailRepo verifyEmailRepo;
     private final UserRepo userRepo;
-    private final RestClient restClient;
     private final ModelMapper modelMapper;
 
     /**
@@ -48,8 +46,6 @@ public class VerifyEmailServiceImpl implements VerifyEmailService {
             userRepo.save(user);
             log.info("User has successfully verify the email by token {}. Records deleted {}.", token, rows);
             UbsProfileCreationDto ubsProfile = modelMapper.map(user, UbsProfileCreationDto.class);
-            Long ubsProfileId = restClient.createUbsProfile(ubsProfile);
-            log.info("Ubs profile with id {} has been created for user with uuid {}.", ubsProfileId, user.getUuid());
             return true;
         } else {
             log.info("User didn't verify his/her email on time with token {}.", token);

@@ -2,7 +2,6 @@ package greencity.dto.user;
 
 import greencity.dto.language.LanguageVO;
 import greencity.dto.ownsecurity.OwnSecurityVO;
-import greencity.dto.socialnetwork.SocialNetworkVO;
 import greencity.dto.verifyemail.VerifyEmailVO;
 import greencity.enums.EmailNotification;
 import greencity.enums.Role;
@@ -16,8 +15,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,10 +43,6 @@ public class UserVO {
     private EmailNotification emailNotification;
 
     private LocalDateTime dateOfRegistration;
-
-    private List<SocialNetworkVO> socialNetworks;
-
-    private List<UserVO> userFriends = new ArrayList<>();
 
     private String refreshTokenKey;
 

@@ -1,8 +1,5 @@
 package greencity.config;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import greencity.security.filters.AccessTokenAuthenticationFilter;
 import greencity.security.jwt.JwtTool;
 import greencity.security.providers.JwtAuthenticationProvider;
@@ -95,9 +92,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/ownSecurity/verifyEmail",
                 "/ownSecurity/updateAccessToken",
                 "/ownSecurity/restorePassword",
-                "/googleSecurity",
-                "/facebookSecurity/generateFacebookAuthorizeURL",
-                "/facebookSecurity/facebook",
                 "/user/emailNotifications",
                 "/user/activatedUsersAmount",
                 "/user/{userId}/habit/assign",
@@ -257,14 +251,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    /**
-     * Bean {@link GoogleIdTokenVerifier} that uses in verify googleIdToken.
-     */
-    @Bean
-    public GoogleIdTokenVerifier googleIdTokenVerifier() {
-        return new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
-            JacksonFactory.getDefaultInstance()).build();
     }
 }

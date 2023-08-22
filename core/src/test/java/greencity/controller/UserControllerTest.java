@@ -331,7 +331,6 @@ class UserControllerTest {
             + "\t\"name\": \"testName\",\n"
             + "\t\"city\": \"city\",\n"
             + "\t\"userCredo\": \"credo\",\n"
-            + "\t\"socialNetworks\": [],\n"
             + "\t\"showLocation\": true,\n"
             + "\t\"showEcoPlace\": true,\n"
             + "\t\"showShoppingList\": false\n"

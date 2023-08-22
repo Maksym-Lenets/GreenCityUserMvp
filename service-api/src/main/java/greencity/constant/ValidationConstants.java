@@ -13,7 +13,6 @@ public final class ValidationConstants {
             + "dot in the middle of the name, dash and whitespaces.";
 
     public static final String USER_CREATED = "{greenCity.validation.user.created}";
-    public static final int MAX_AMOUNT_OF_SOCIAL_NETWORK_LINKS = 5;
     public static final int CATEGORY_NAME_MIN_LENGTH = 3;
     public static final int CATEGORY_NAME_MAX_LENGTH = 30;
     public static final String CATEGORY_NAME_BAD_FORMED = "{greenCity.validation.bad.formed.category.name}";

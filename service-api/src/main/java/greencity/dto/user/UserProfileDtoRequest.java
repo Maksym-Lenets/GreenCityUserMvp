@@ -1,14 +1,11 @@
 package greencity.dto.user;
 
-import greencity.annotations.ValidSocialNetworkLinks;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.Builder;
-
-import java.util.List;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -29,8 +26,6 @@ public class UserProfileDtoRequest {
     private String city;
     @Size(max = 170)
     private String userCredo;
-    @ValidSocialNetworkLinks
-    private List<String> socialNetworks;
     private Boolean showLocation;
     private Boolean showEcoPlace;
     private Boolean showShoppingList;

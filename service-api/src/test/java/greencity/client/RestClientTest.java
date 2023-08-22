@@ -2,8 +2,6 @@ package greencity.client;
 
 import greencity.constant.RestTemplateLinks;
 import greencity.dto.shoppinglist.CustomShoppingListItemResponseDto;
-import greencity.dto.socialnetwork.SocialNetworkImageVO;
-import greencity.dto.ubs.UbsProfileCreationDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +24,6 @@ import static greencity.constant.AppConstant.IMAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class RestClientTest {
@@ -36,10 +33,6 @@ class RestClientTest {
     private HttpServletRequest httpServletRequest;
     @Value("${greencity.server.address}")
     private String greenCityServerAddress;
-    @Value("${greencitychat.server.address}")
-    private String greenCityChatServerAddress;
-    @Value("${greencityubs.server.address}")
-    private String greenCityUbsServerAddress;
     @InjectMocks
     private RestClient restClient;
 
@@ -64,23 +57,6 @@ class RestClientTest {
 
         assertEquals(Arrays.asList(customShoppingListItemResponseDtos),
             restClient.getAllAvailableCustomShoppingListItems(userId, habitId));
-    }
-
-    @Test
-    void convertToMultipartImage() {
-        MultipartFile image = new MockMultipartFile("data", "filename.png",
-            "image/png", "some xml".getBytes());
-        String profilePicturePath = "profilePicturePath";
-        String accessToken = "accessToken";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTHORIZATION, accessToken);
-        when(httpServletRequest.getHeader(AUTHORIZATION)).thenReturn(accessToken);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        when(restTemplate.exchange(greenCityServerAddress
-            + RestTemplateLinks.FILES_CONVERT + RestTemplateLinks.IMAGE
-            + profilePicturePath, HttpMethod.POST, entity, MultipartFile.class))
-                .thenReturn(ResponseEntity.ok(image));
-        assertEquals(image, restClient.convertToMultipartImage(profilePicturePath));
     }
 
     @Test
@@ -109,38 +85,6 @@ class RestClientTest {
             String.class)).thenReturn(imagePath);
         assertEquals(imagePath,
             restClient.uploadImage(image));
-    }
-
-    @Test
-    void deleteSocialNetwork() {
-        String accessToken = "accessToken";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTHORIZATION, accessToken);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        Long socialNetworkId = 1L;
-        when(httpServletRequest.getHeader(AUTHORIZATION)).thenReturn(accessToken);
-        when(restTemplate.exchange(greenCityServerAddress
-            + RestTemplateLinks.SOCIAL_NETWORKS + RestTemplateLinks.ID + socialNetworkId,
-            HttpMethod.DELETE, entity, Long.class)).thenReturn(ResponseEntity.ok(socialNetworkId));
-        assertEquals(socialNetworkId, restClient.deleteSocialNetwork(socialNetworkId));
-    }
-
-    @Test
-    void getSocialNetworkImageByUrl() {
-        String accessToken = "accessToken";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTHORIZATION, accessToken);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        String url = "http:";
-        SocialNetworkImageVO socialNetworkImageVO = new SocialNetworkImageVO();
-        socialNetworkImageVO.setId(1L);
-        socialNetworkImageVO.setHostPath("test");
-        socialNetworkImageVO.setImagePath("http:");
-        when(httpServletRequest.getHeader(AUTHORIZATION)).thenReturn(accessToken);
-        when(restTemplate.exchange(greenCityServerAddress
-            + RestTemplateLinks.SOCIAL_NETWORKS_IMAGE + RestTemplateLinks.URL + url,
-            HttpMethod.GET, entity, SocialNetworkImageVO.class)).thenReturn(ResponseEntity.ok(socialNetworkImageVO));
-        assertEquals(socialNetworkImageVO, restClient.getSocialNetworkImageByUrl(url));
     }
 
     @Test
@@ -200,21 +144,4 @@ class RestClientTest {
         assertEquals(Arrays.asList(allLanguageCodes), restClient.getAllLanguageCodes());
     }
 
-    @Test
-    void createUbsProfileTest() {
-        UbsProfileCreationDto ubsProfileCreationDto =
-            UbsProfileCreationDto.builder()
-                .uuid("f81d4fae-7dec-11d0-a765-00a0c91e6bf6")
-                .email("ubsemail@mail.com")
-                .name("UBS")
-                .build();
-        ResponseEntity<Long> responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(1L);
-        when(restTemplate.postForEntity(greenCityUbsServerAddress + RestTemplateLinks.UBS_USER_PROFILE + "/user/create",
-            ubsProfileCreationDto, Long.class)).thenReturn(responseEntity);
-        Long id = restClient.createUbsProfile(ubsProfileCreationDto);
-        verify(restTemplate, times(1)).postForEntity(
-            greenCityUbsServerAddress + RestTemplateLinks.UBS_USER_PROFILE + "/user/create",
-            ubsProfileCreationDto, Long.class);
-        assertEquals(1L, id);
-    }
 }

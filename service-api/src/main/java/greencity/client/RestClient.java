@@ -1,10 +1,7 @@
 package greencity.client;
 
 import greencity.constant.RestTemplateLinks;
-import greencity.dto.friends.FriendsChatDto;
 import greencity.dto.shoppinglist.CustomShoppingListItemResponseDto;
-import greencity.dto.socialnetwork.SocialNetworkImageVO;
-import greencity.dto.ubs.UbsProfileCreationDto;
 import greencity.dto.user.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +33,6 @@ public class RestClient {
     @Value("${greencity.server.address}")
     private String greenCityServerAddress;
     private final HttpServletRequest httpServletRequest;
-    @Value("${greencitychat.server.address}")
-    private String greenCityChatServerAddress;
-    @Value("${greencityubs.server.address}")
-    private String greenCityUbsServerAddress;
 
     /**
      * Method for finding all custom shopping list items.
@@ -56,21 +49,6 @@ public class RestClient {
         CustomShoppingListItemResponseDto[] responseDtos = exchange.getBody();
         assert responseDtos != null;
         return Arrays.asList(responseDtos);
-    }
-
-    /**
-     * Method for convert image to multipart image.
-     *
-     * @param profilePicturePath link to image
-     * @return MultipartFile
-     * @author Orest Mamchuk
-     */
-    public MultipartFile convertToMultipartImage(String profilePicturePath) {
-        HttpEntity<String> entity = new HttpEntity<>(setHeader());
-        return restTemplate.exchange(greenCityServerAddress
-            + RestTemplateLinks.FILES_CONVERT + RestTemplateLinks.IMAGE
-            + profilePicturePath,
-            HttpMethod.POST, entity, MultipartFile.class).getBody();
     }
 
     /**
@@ -92,34 +70,6 @@ public class RestClient {
         }
         return restTemplate.postForObject(greenCityServerAddress
             + RestTemplateLinks.FILES_IMAGE, requestEntity, String.class);
-    }
-
-    /**
-     * Method for delete social network by id.
-     *
-     * @param socialNetworkId of {@link SocialNetworkImageVO}
-     * @return Long
-     * @author Orest Mamchuk
-     */
-    public Long deleteSocialNetwork(Long socialNetworkId) {
-        HttpEntity<String> entity = new HttpEntity<>(setHeader());
-        return restTemplate.exchange(greenCityServerAddress
-            + RestTemplateLinks.SOCIAL_NETWORKS + RestTemplateLinks.ID + socialNetworkId,
-            HttpMethod.DELETE, entity, Long.class).getBody();
-    }
-
-    /**
-     * Method for finding social network image.
-     *
-     * @param url social network image url
-     * @return {@link SocialNetworkImageVO}
-     * @author Orest Mamchuk
-     */
-    public SocialNetworkImageVO getSocialNetworkImageByUrl(String url) {
-        HttpEntity<String> entity = new HttpEntity<>(setHeader());
-        return restTemplate.exchange(greenCityServerAddress
-            + RestTemplateLinks.SOCIAL_NETWORKS_IMAGE + RestTemplateLinks.URL + url,
-            HttpMethod.GET, entity, SocialNetworkImageVO.class).getBody();
     }
 
     /**
@@ -151,23 +101,6 @@ public class RestClient {
     }
 
     /**
-     * Method for checking if there is a chat between two people.
-     *
-     * @param firstUserId  of {Long}
-     * @param secondUserId of {Long}
-     * @return {FriendsChatDto}
-     * @author Max Bohonko
-     */
-    public FriendsChatDto chatBetweenTwo(Long firstUserId, Long secondUserId) {
-        HttpEntity<String> entity = new HttpEntity<>(setHeader());
-        FriendsChatDto body =
-            restTemplate.exchange(greenCityChatServerAddress + "/chat/exist/" + firstUserId + "/" + secondUserId,
-                HttpMethod.GET, entity, FriendsChatDto.class).getBody();
-        assert body != null;
-        return body;
-    }
-
-    /**
      * Method for getting amount of in progress habit by {@link UserVO} id.
      *
      * @param userId of {@link UserVO}
@@ -191,21 +124,6 @@ public class RestClient {
             + RestTemplateLinks.LANGUAGE, String[].class);
         assert restTemplateForObject != null;
         return Arrays.asList(restTemplateForObject);
-    }
-
-    /**
-     * Method for creating an ubs profile for a user.
-     *
-     * @param ubsProfile of {@link UbsProfileCreationDto};
-     * @return id of ubs profile {@link Long};
-     * @author Maksym Golik
-     */
-
-    public Long createUbsProfile(UbsProfileCreationDto ubsProfile) {
-        return restTemplate
-            .postForEntity(greenCityUbsServerAddress + RestTemplateLinks.UBS_USER_PROFILE + "/user/create",
-                ubsProfile, Long.class)
-            .getBody();
     }
 
     /**

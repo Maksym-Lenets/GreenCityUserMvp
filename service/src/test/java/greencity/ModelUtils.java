@@ -21,7 +21,6 @@ import greencity.dto.violation.UserViolationMailDto;
 import greencity.entity.Language;
 import greencity.entity.OwnSecurity;
 import greencity.entity.RestorePasswordEmail;
-import greencity.entity.SocialNetwork;
 import greencity.entity.User;
 import greencity.entity.VerifyEmail;
 import greencity.enums.EmailNotification;
@@ -32,7 +31,6 @@ import greencity.security.dto.ownsecurity.OwnSignUpDto;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -104,19 +102,13 @@ public class ModelUtils {
             .build();
     }
 
-    public static User getUserWithSocialNetworks() {
-        List<SocialNetwork> socialNetwork = new ArrayList<>();
-        socialNetwork.add(SocialNetwork.builder()
-            .id(1L)
-            .url("https://www.facebook.com")
-            .build());
+    public static User getUserWithoutSocialNetworks() {
         return User.builder()
             .id(1L)
             .email(TestConst.EMAIL)
             .name(TestConst.NAME)
             .role(Role.ROLE_USER)
             .language(ModelUtils.getLanguage())
-            .socialNetworks(socialNetwork)
             .lastActivityTime(LocalDateTime.now())
             .verifyEmail(new VerifyEmail())
             .dateOfRegistration(LocalDateTime.now())
@@ -173,11 +165,6 @@ public class ModelUtils {
                 .expiryDate(LocalDateTime.of(2021, 7, 7, 7, 7))
                 .token("toooookkkeeeeen42324532542")
                 .build())
-            .userFriends(Collections.singletonList(
-                UserVO.builder()
-                    .id(75L)
-                    .name("Andrew")
-                    .build()))
             .refreshTokenKey("refreshtoooookkkeeeeen42324532542")
             .ownSecurity(null)
             .dateOfRegistration(LocalDateTime.of(2020, 6, 6, 13, 47))
@@ -205,12 +192,6 @@ public class ModelUtils {
             .name("Name")
             .city("City")
             .userCredo("userCredo")
-            .socialNetworks(List.of(
-                "https://www.facebook.com",
-                "https://www.instagram.com",
-                "https://www.youtube.com",
-                "https://www.gmail.com",
-                "https://www.google.com"))
             .showLocation(true)
             .showEcoPlace(true)
             .showShoppingList(true)
